@@ -43,12 +43,12 @@ button { font: inherit; }
 .glow-one { width: 520px; height: 520px; top: -200px; right: -100px; background: radial-gradient(circle, rgba(229,87,63,.14), transparent 67%); }
 .glow-two { width: 560px; height: 560px; bottom: -260px; left: 9%; background: radial-gradient(circle, rgba(49,78,160,.13), transparent 67%); }
 
-main { width: min(1100px, calc(100% - 48px)); margin: 0 auto; padding: 0 0 100px 250px; }
+main { width: min(1400px, calc(100% - 48px)); margin: 0 auto; padding: 0 0 100px 250px; }
 .section-anchor { scroll-margin-top: 34px; }
 .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 0 60px; text-align: center; }
 .eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; color: var(--blue); font-size: 12px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
 .eyebrow span { width: 25px; height: 2px; background: var(--coral); }
-h1 { max-width: 1000px; margin: 0; font-size: clamp(42px, 5.5vw, 70px); line-height: 1.08; letter-spacing: -.052em; font-weight: 800; }
+h1 { max-width: 1140px; margin: 0; font-size: clamp(42px, 5.5vw, 70px); line-height: 1.08; letter-spacing: -.052em; font-weight: 800; }
 h1 span { color: var(--coral); }
 .authors { margin-top: 30px; font-size: 20px; font-weight: 700; }
 .affiliation { margin-top: 2px; color: var(--muted); font-size: 14px; }
