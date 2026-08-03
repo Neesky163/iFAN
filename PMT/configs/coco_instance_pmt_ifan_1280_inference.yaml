@@ -1,0 +1,35 @@
+model:
+  class_path: inference.mask_classification_instance.MaskClassificationInstance
+  init_args:
+    quality_score_enabled: true
+    utility_score_temperature: 1.0
+    utility_score_bias: -1.5
+    eval_top_k_instances: 100
+    ckpt_path: null
+    network:
+      class_path: models.pmt.PMT
+      init_args:
+        quality_head_enabled: true
+        masked_attn_enabled: false
+        num_q: 200
+        num_blocks: 6
+        interaction_indices:
+        - 5
+        - 11
+        - 17
+        - 23
+        hidden_dim: 1024
+        encoder:
+          class_path: models.vit.ViT
+          init_args:
+            backbone_name: facebook/dinov3-vitl16-pretrain-lvd1689m
+data:
+  class_path: datasets.coco_instance.COCOInstance
+  init_args:
+    path: .
+    batch_size: 4
+    num_workers: 4
+    num_classes: 80
+    img_size:
+    - 1280
+    - 1280

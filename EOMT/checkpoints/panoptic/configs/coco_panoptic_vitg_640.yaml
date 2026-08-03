@@ -1,0 +1,20 @@
+model:
+  init_args:
+    utility_score_temperature: 1.0
+    utility_score_bias: -1.1
+    mask_thresh: 0.60
+    overlap_thresh: 0.75
+    network:
+      class_path: models.eomt.EoMT
+      init_args:
+        num_q: 200
+        num_blocks: 5
+        quality_head_enabled: True
+        encoder:
+          class_path: models.vit.ViT
+          init_args:
+            backbone_name: vit_giant_patch14_reg4_dinov2
+data:
+  class_path: datasets.coco_panoptic.COCOPanoptic
+  init_args:
+    stuff_classes: [80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132]

@@ -1,0 +1,34 @@
+model:
+  class_path: inference.mask_classification_semantic.MaskClassificationSemantic
+  init_args:
+    quality_score_enabled: true
+    utility_score_temperature: 1.5
+    utility_score_bias: 0.0
+    ckpt_path: null
+    network:
+      class_path: models.pmt.PMT
+      init_args:
+        quality_head_enabled: true
+        masked_attn_enabled: false
+        num_q: 100
+        num_blocks: 6
+        hidden_dim: 1024
+        interaction_indices:
+        - 5
+        - 11
+        - 17
+        - 23
+        encoder:
+          class_path: models.vit.ViT
+          init_args:
+            backbone_name: facebook/dinov3-vitl16-pretrain-lvd1689m
+data:
+  class_path: datasets.ade20k_semantic.ADE20KSemantic
+  init_args:
+    path: .
+    batch_size: 4
+    num_workers: 4
+    num_classes: 150
+    img_size:
+    - 512
+    - 512

@@ -1,0 +1,15 @@
+model:
+  init_args:
+    utility_score_temperature: 1.0
+    utility_score_bias: -0.5
+    mask_thresh: 0.55
+    overlap_thresh: 0.65
+    network:
+      class_path: models.eomt.EoMT
+      init_args:
+        num_q: 100
+        quality_head_enabled: True
+        encoder:
+          class_path: models.vit.ViT
+data:
+  class_path: datasets.ade20k_semantic.ADE20KSemantic

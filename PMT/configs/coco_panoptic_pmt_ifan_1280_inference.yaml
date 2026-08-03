@@ -1,0 +1,90 @@
+model:
+  class_path: inference.mask_classification_panoptic.MaskClassificationPanoptic
+  init_args:
+    quality_score_enabled: true
+    utility_score_temperature: 1.0
+    utility_score_bias: -1.0
+    mask_thresh: 0.6
+    overlap_thresh: 0.8
+    ckpt_path: null
+    network:
+      class_path: models.pmt.PMT
+      init_args:
+        quality_head_enabled: true
+        masked_attn_enabled: false
+        num_q: 200
+        num_blocks: 6
+        interaction_indices:
+        - 5
+        - 11
+        - 17
+        - 23
+        hidden_dim: 1024
+        encoder:
+          class_path: models.vit.ViT
+          init_args:
+            backbone_name: facebook/dinov3-vitl16-pretrain-lvd1689m
+data:
+  class_path: datasets.coco_panoptic.COCOPanoptic
+  init_args:
+    path: .
+    batch_size: 4
+    num_workers: 4
+    num_classes: 133
+    img_size:
+    - 1280
+    - 1280
+    stuff_classes:
+    - 80
+    - 81
+    - 82
+    - 83
+    - 84
+    - 85
+    - 86
+    - 87
+    - 88
+    - 89
+    - 90
+    - 91
+    - 92
+    - 93
+    - 94
+    - 95
+    - 96
+    - 97
+    - 98
+    - 99
+    - 100
+    - 101
+    - 102
+    - 103
+    - 104
+    - 105
+    - 106
+    - 107
+    - 108
+    - 109
+    - 110
+    - 111
+    - 112
+    - 113
+    - 114
+    - 115
+    - 116
+    - 117
+    - 118
+    - 119
+    - 120
+    - 121
+    - 122
+    - 123
+    - 124
+    - 125
+    - 126
+    - 127
+    - 128
+    - 129
+    - 130
+    - 131
+    - 132
