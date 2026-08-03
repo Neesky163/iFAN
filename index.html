@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="iFAN: Inference-Aware Learning for Plain Mask Transformers. Project page for the AAAI 2027 submission."
+    />
+    <meta name="theme-color" content="#f7f8fc" />
+    <title>iFAN — Inference-Aware Learning for Plain Mask Transformers</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="page-glow glow-one" aria-hidden="true"></div>
+    <div class="page-glow glow-two" aria-hidden="true"></div>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="toc">
+      <span></span><span></span><span></span>
+      <span class="sr-only">Toggle navigation</span>
+    </button>
+
+    <aside id="toc" class="toc" aria-label="Page navigation">
+      <a class="brand" href="#overview" aria-label="iFAN home">
+        <span class="brand-mark">i</span><span>FAN</span>
+      </a>
+      <p class="toc-label">On this page</p>
+      <nav>
+        <a class="active" href="#overview">Overview</a>
+        <a href="#abstract">Abstract</a>
+        <a href="#motivation">Motivation</a>
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+        <a href="#diagnostics">Diagnostics</a>
+        <a href="#citation">Citation</a>
+      </nav>
+      <p class="venue">AAAI 2027 Submission</p>
+    </aside>
+
+    <main>
+      <header id="overview" class="hero section-anchor">
+        <div class="eyebrow"><span></span> Inference-aware segmentation</div>
+        <h1><span>iFAN</span>: Inference-Aware Learning<br />for Plain Mask Transformers</h1>
+        <div class="authors">Anonymous Authors</div>
+        <div class="affiliation">AAAI 2027 Submission</div>
+
+        <div class="hero-links">
+          <span class="button button-primary button-disabled" aria-disabled="true" title="Paper link coming soon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l4 4v16H6zM14 2v5h5M9 13h6M9 17h6M9 9h2" /></svg>
+            Paper · soon
+          </span>
+          <span class="button button-secondary button-disabled" aria-disabled="true" title="Code link coming soon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M14 5l-4 14" /></svg>
+            Code · soon
+          </span>
+        </div>
+
+        <figure class="hero-figure paper-figure">
+          <img src="assets/intro.webp" alt="Examples of query-ranking mismatch and stronger intermediate-layer predictions" />
+          <figcaption>
+            <strong>Why iFAN?</strong> The highest-scoring query is often not the most accurate one, while
+            better predictions can appear before the final decoder layer.
+          </figcaption>
+        </figure>
+
+        <div class="tldr">
+          <span>TL;DR</span>
+          <p>
+            iFAN trains mask transformers the way they are actually used: it aligns query competition with
+            mask quality and transfers stronger intermediate predictions to the final layer—without adding
+            multi-layer inference.
+          </p>
+        </div>
+      </header>
+
+      <section id="abstract" class="section section-anchor">
+        <div class="section-heading">
+          <span>01</span>
+          <h2>Abstract</h2>
+        </div>
+        <div class="abstract-card">
+          <p>
+            Query-based mask transformers assemble segmentation outputs through pixel-wise competition among
+            query predictions of the final layer, yet this inference process is not explicitly optimized during
+            training. We identify two key mismatches: the query with the highest probability–mask score does not
+            necessarily produce the most accurate mask, and final-layer decoding may discard superior predictions
+            from intermediate layers.
+          </p>
+          <p>
+            We propose <strong>Inference-Aware Learning (iFAN)</strong>, a general training framework for plain mask
+            transformers. <strong>Adjusted Probability-Mask Ranking (APMR)</strong> aligns query competition with
+            predicted mask quality and suppresses high-confidence but inaccurate competitors.
+            <strong>Cross-Layer Self-Distillation (CLSD)</strong> transfers stronger intermediate predictions to the
+            final layer. Both objectives are training-only, so inference retains efficient final-layer decoding.
+          </p>
+          <p>
+            Across COCO, ADE20K, and Cityscapes, iFAN consistently improves panoptic, instance, and semantic
+            segmentation under different architectures, backbone scales, and input resolutions, with negligible
+            additional parameters, FLOPs, and inference latency.
+          </p>
+        </div>
+      </section>
+
+      <section id="motivation" class="section section-anchor">
+        <div class="section-heading">
+          <span>02</span>
+          <h2>Two training–inference gaps</h2>
+        </div>
+        <div class="problem-grid">
+          <article class="problem-card">
+            <div class="card-index">A</div>
+            <h3>Queries compete at inference</h3>
+            <p>
+              Pixels are assigned by score-weighted masks. A confident but inaccurate query can suppress a
+              better-matched one, despite Hungarian matching supervision during training.
+            </p>
+            <strong class="problem-stat">64.45% <small>query disagreement</small></strong>
+          </article>
+          <article class="problem-card">
+            <div class="card-index">B</div>
+            <h3>Intermediate layers can be better</h3>
+            <p>
+              Training supervises several decoder layers, but standard inference only reads the final one. Useful
+              evidence learned by an earlier layer may degrade before prediction.
+            </p>
+            <strong class="problem-stat">80 / 133 <small>classes peak early</small></strong>
+          </article>
+        </div>
+      </section>
+
+      <section id="method" class="section section-anchor">
+        <div class="section-heading">
+          <span>03</span>
+          <h2>Inference-Aware Learning</h2>
+        </div>
+        <figure class="paper-figure method-figure">
+          <img src="assets/method.webp" alt="Overview of the iFAN training framework" />
+          <figcaption>
+            <strong>iFAN overview.</strong> APMR improves competition across queries; CLSD preserves stronger
+            evidence across layers. The additional learning objectives are removed at inference.
+          </figcaption>
+        </figure>
+
+        <div class="method-grid">
+          <article class="method-card apmr">
+            <div class="method-tag">APMR</div>
+            <h3>Adjusted Probability-Mask Ranking</h3>
+            <p>
+              A soft-IoU-supervised quality branch calibrates each query's class score. The ranking objective then
+              teaches the matched query to outrank hard, high-evidence competitors inside its target region.
+            </p>
+          </article>
+          <article class="method-card clsd">
+            <div class="method-tag">CLSD</div>
+            <h3>Cross-Layer Self-Distillation</h3>
+            <p>
+              For each target, iFAN selects an intermediate teacher only when it offers both higher soft-IoU and
+              stronger target-region evidence, then distills that evidence into the final decoder layer.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="results" class="section section-anchor">
+        <div class="section-heading">
+          <span>04</span>
+          <h2>Consistent gains across tasks</h2>
+        </div>
+        <p class="section-lede">
+          iFAN improves two plain mask-transformer families across model sizes and resolutions. These are average
+          absolute gains reported over all evaluated configurations.
+        </p>
+        <div class="metric-grid">
+          <article class="metric-card">
+            <span class="metric-name">Panoptic</span>
+            <strong>+1.20</strong>
+            <span class="metric-unit">PQ</span>
+            <small>COCO · ADE20K</small>
+          </article>
+          <article class="metric-card">
+            <span class="metric-name">Instance</span>
+            <strong>+1.30</strong>
+            <span class="metric-unit">AP</span>
+            <small>COCO</small>
+          </article>
+          <article class="metric-card">
+            <span class="metric-name">Semantic</span>
+            <strong>+0.63</strong>
+            <span class="metric-unit">mIoU</span>
+            <small>Cityscapes · ADE20K</small>
+          </article>
+        </div>
+
+        <div class="results-table-wrap">
+          <table>
+            <thead>
+              <tr><th>Task / dataset</th><th>Model</th><th>Input</th><th>Baseline</th><th>iFAN</th><th>Gain</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Panoptic · ADE20K</td><td>PMT ViT-L</td><td>1280²</td><td>50.5 PQ</td><td><strong>53.0 PQ</strong></td><td><span>+2.5</span></td></tr>
+              <tr><td>Panoptic · COCO</td><td>EoMT ViT-L</td><td>640²</td><td>56.0 PQ</td><td><strong>57.0 PQ</strong></td><td><span>+1.0</span></td></tr>
+              <tr><td>Instance · COCO</td><td>EoMT ViT-L</td><td>1280²</td><td>48.8 AP</td><td><strong>50.6 AP</strong></td><td><span>+1.8</span></td></tr>
+              <tr><td>Semantic · ADE20K</td><td>PMT ViT-L</td><td>512²</td><td>58.5 mIoU</td><td><strong>59.4 mIoU</strong></td><td><span>+0.9</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="qualitative-grid" aria-label="Qualitative segmentation results">
+          <figure>
+            <img src="assets/panoptic.webp" alt="Qualitative panoptic segmentation results" loading="lazy" />
+            <figcaption>Panoptic segmentation</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/instance.webp" alt="Qualitative instance segmentation results" loading="lazy" />
+            <figcaption>Instance segmentation</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/semantic.webp" alt="Qualitative semantic segmentation results" loading="lazy" />
+            <figcaption>Semantic segmentation</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="diagnostics" class="section section-anchor">
+        <div class="section-heading">
+          <span>05</span>
+          <h2>What changes inside the model?</h2>
+        </div>
+        <div class="diagnostic-grid">
+          <figure class="paper-figure">
+            <img src="assets/fig_intro_ranking_misalignment.webp" alt="Query disagreement diagnostic chart" loading="lazy" />
+            <figcaption>
+              Query disagreement falls from <strong>64.45%</strong> to <strong>27.49%</strong>; low-IoU winners fall
+              from 29.27% to 11.50%.
+            </figcaption>
+          </figure>
+          <figure class="paper-figure">
+            <img src="assets/fig_intro_layer_optimality.webp" alt="Layer optimality diagnostic chart" loading="lazy" />
+            <figcaption>
+              The final layer becomes optimal for <strong>98 classes</strong>, up from 53, showing that CLSD preserves
+              stronger intermediate evidence.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="citation" class="section section-anchor citation-section">
+        <div class="section-heading">
+          <span>06</span>
+          <h2>Citation</h2>
+        </div>
+        <p>If you find this work useful, please consider citing it.</p>
+        <div class="code-block">
+          <button class="copy-button" type="button" aria-label="Copy BibTeX">Copy</button>
+          <pre><code id="bibtex">@inproceedings{anonymous2027ifan,
+  title     = {iFAN: Inference-Aware Learning for Plain Mask Transformers},
+  author    = {Anonymous Authors},
+  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  year      = {2027}
+}</code></pre>
+        </div>
+      </section>
+
+      <footer>
+        <a href="#overview" class="footer-brand"><span>i</span>FAN</a>
+        <p>Inference-aware learning for plain mask transformers.</p>
+        <a href="#overview">Back to top ↑</a>
+      </footer>
+    </main>
+  </body>
+</html>
