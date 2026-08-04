@@ -50,8 +50,14 @@ main { width: min(1400px, calc(100% - 48px)); margin: 0 auto; padding: 0 0 100px
 .eyebrow span { width: 25px; height: 2px; background: var(--coral); }
 h1 { max-width: 1140px; margin: 0; font-size: clamp(42px, 5.5vw, 70px); line-height: 1.08; letter-spacing: -.052em; font-weight: 800; }
 h1 span { color: var(--coral); }
-.authors { margin-top: 30px; font-size: 20px; font-weight: 700; }
-.affiliation { margin-top: 2px; color: var(--muted); font-size: 14px; }
+.authors { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 20px; max-width: 1050px; margin-top: 30px; font-size: 18px; font-weight: 700; }
+.authors span { white-space: nowrap; }
+.authors sup, .affiliations sup { color: var(--blue); font-size: .62em; font-weight: 800; line-height: 0; }
+.affiliations { display: grid; justify-items: center; gap: 6px; max-width: 1060px; margin-top: 13px; color: var(--muted); font-size: 13px; line-height: 1.55; }
+.affiliation-list, .author-notes { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 18px; }
+.author-notes { gap: 2px 14px; font-size: 11px; }
+.author-email { color: var(--blue-dark); font-family: "DM Mono", monospace; font-size: 12px; text-decoration: none; }
+.author-email:hover { text-decoration: underline; }
 .hero-links { display: flex; gap: 12px; margin: 26px 0 44px; }
 .button { display: inline-flex; align-items: center; gap: 9px; min-width: 135px; padding: 11px 18px; border: 1px solid var(--ink); border-radius: 999px; text-decoration: none; font-size: 13px; font-weight: 800; transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
 .button:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(22,26,36,.13); }
@@ -134,7 +140,6 @@ footer a { text-decoration: none; font-weight: 700; }
 .toc nav { position: relative; }
 .toc nav a { display: block; position: relative; margin: 6px 0; padding: 9px 12px; color: #4a5374; border-radius: 12px; font-size: 15px; font-weight: 700; text-decoration: none; transition: color .2s ease, background-color .2s ease, transform .2s ease; }
 .toc nav a:hover, .toc nav a.active { color: var(--blue-dark); background: rgba(255,255,255,.72); transform: translateX(4px); }
-.venue { margin: 22px 12px 0; color: #7f879c; font-family: "DM Mono", monospace; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
 .nav-toggle { display: none; }
 
 @media (max-width: 1120px) {
@@ -154,6 +159,9 @@ footer a { text-decoration: none; font-weight: 700; }
 @media (max-width: 620px) {
   main { width: min(100% - 24px, 540px); }
   h1 { font-size: 39px; }
+  .authors { gap: 3px 14px; font-size: 16px; }
+  .affiliations { font-size: 12px; }
+  .affiliation-list { gap: 3px 12px; }
   .section { padding-top: 80px; }
   .section-heading { gap: 10px; }
   .problem-grid, .method-grid, .diagnostic-grid, .metric-grid { grid-template-columns: 1fr; }
