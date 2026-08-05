@@ -1,24 +1,19 @@
-# iFAN: Inference and Evaluation Code
+# iFAN: Inference-Aware Learning for Plain Mask Transformers
 
-This repository provides the inference-only release accompanying the iFAN
-paper. It contains two self-contained implementations for semantic, instance,
-and panoptic segmentation:
+This repository currently provides inference code for EoMT-iFAN and PMT-iFAN only. The remaining code, including the training pipeline, will be released upon acceptance of the paper.
 
 | Implementation | Backbone | Tasks | Documentation |
 |---|---|---|---|
 | PMT-iFAN | DINOv3 ViT-L/16 | ADE20K semantic/panoptic; COCO instance/panoptic | [PMT/README.md](PMT/README.md) |
 | EoMT-iFAN | DINOv2 ViT-L/ViT-G | ADE20K and Cityscapes semantic; ADE20K and COCO panoptic; COCO instance | [EOMT/README.md](EOMT/README.md) |
 
-The release is intentionally limited to model construction, checkpoint
-loading, image prediction, and validation-set evaluation. Training code and
-training-only dependencies are not included.
 
 ## Repository structure
 
 ```text
 .
-├── PMT/                 # PMT-iFAN code, configs, and weights
-└── EOMT/                # EoMT-iFAN code, configs, and weights
+├── PMT/                 # PMT-iFAN code, configs
+└── EOMT/                # EoMT-iFAN code, configs
 ```
 
 PMT and EoMT use different pinned PyTorch versions. Install them in separate
@@ -49,20 +44,7 @@ python3 infer.py \
   --output outputs/semantic
 ```
 
-See the implementation-specific READMEs for dataset preparation, all released
-checkpoints, benchmark commands, output formats, and troubleshooting.
 
-## Scope and reproducibility
+## Acknowledgments
 
-- Released configs and inference checkpoints are paired by filename.
-- Evaluation can read the official ADE20K, COCO 2017, and Cityscapes archives
-  directly; the expected layouts are documented in each subdirectory.
-- Evaluation commands produce machine-readable JSON/CSV summaries for
-  reproducibility.
-- Small differences in the last reported digits may occur across CUDA,
-  PyTorch, and GPU versions.
-
-## Citation
-
-If you use this code or the released checkpoints, please cite the accompanying
-iFAN paper. Citation metadata will be added after publication.
+We sincerely thank the authors of [EoMT](https://github.com/tue-mps/eomt) and [PMT](https://github.com/tue-mps/pmt) for open-sourcing their excellent work and codebases. Our implementation greatly benefits from these projects.
