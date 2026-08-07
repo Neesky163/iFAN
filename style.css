@@ -64,9 +64,6 @@ h1 span { color: var(--coral); }
 .button svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .button-primary { color: white; background: var(--ink); }
 .button-secondary { background: rgba(255,255,255,.65); }
-.button-disabled { cursor: not-allowed; opacity: .68; }
-.button-disabled:hover { transform: none; box-shadow: none; }
-
 .paper-figure { margin: 0; overflow: hidden; background: white; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
 .paper-figure img { width: 100%; }
 .paper-figure figcaption { padding: 15px 22px 18px; color: var(--muted); border-top: 1px solid var(--line); font-size: 13px; line-height: 1.55; text-align: left; }
