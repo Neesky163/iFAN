@@ -3,9 +3,7 @@
 [Repository overview](../README.md)
 
 This directory contains a self-contained, inference-only EoMT-iFAN release for
-semantic, instance, and panoptic segmentation. It includes model definitions,
-portable configs, inference checkpoints, image prediction, and validation-set
-evaluation.
+semantic, instance, and panoptic segmentation. 
 
 ## Contents
 
@@ -15,7 +13,6 @@ EOMT/
 │   ├── semantic/{configs,inference}/
 │   ├── instance/{configs,inference}/
 │   └── panoptic/{configs,inference}/
-├── inference/                  # checkpoint loading and post-processing
 ├── models/                     # EoMT and ViT definitions
 ├── scripts/                    # task-specific evaluation wrappers
 ├── infer.py                    # prediction for an image or directory
@@ -23,20 +20,20 @@ EOMT/
 └── requirements.txt
 ```
 
+## Checkpoints
+
+Pretrained EoMT-iFAN checkpoints are available upon request. Please submit the
+[checkpoint access form](https://docs.google.com/forms/d/e/1FAIpQLSf3r8iXFp233mapvFjmfbQQSQEgyo0CdbCUKz2Z77Rwe-Seqg/viewform?usp=publish-editor); once your request is approved, you will be able to download the checkpoints.
 
 ## Installation
 
-Python 3.10 or later and a CUDA-capable GPU are recommended. Use a dedicated
-environment because EoMT and PMT pin different PyTorch versions.
+Python 3.10 or later and a CUDA-capable GPU are recommended. You can refer to the [EoMT](https://github.com/tue-mps/eomt) for configuration.
 
 ```bash
 cd EOMT
 python3 -m pip install -r requirements.txt
 ```
 
-The ViT-L checkpoints use the DINOv2 backbone distributed through `timm`.
-ViT-G checkpoints use `vit_giant_patch14_reg4_dinov2` and require substantially
-more GPU memory.
 
 ## Image prediction
 
@@ -170,5 +167,3 @@ The checkpoint tree contains:
 - COCO instance: ViT-L, 640 and 1280;
 - ADE20K panoptic: ViT-L and ViT-G, 640 and 1280;
 - COCO panoptic: ViT-L and ViT-G, 640 and 1280.
-
-

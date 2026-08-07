@@ -19,6 +19,11 @@ This repository currently provides inference code for EoMT-iFAN and PMT-iFAN onl
 PMT and EoMT use different pinned PyTorch versions. Install them in separate
 environments and follow the instructions in the corresponding subdirectory.
 
+## Checkpoints
+
+Pretrained checkpoints are available upon request. Please submit the
+[checkpoint access form](https://docs.google.com/forms/d/e/1FAIpQLSf3r8iXFp233mapvFjmfbQQSQEgyo0CdbCUKz2Z77Rwe-Seqg/viewform?usp=publish-editor); once your request is approved, you will be able to download the checkpoints.
+
 ## Quick start
 
 For PMT-iFAN:

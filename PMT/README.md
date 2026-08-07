@@ -19,20 +19,15 @@ PMT/
 └── requirements.txt
 ```
 
-Paths in the configs are portable: no checkpoint, dataset, user, or local
-cache path is embedded in a YAML file.
+## Checkpoints
 
-The `trainer` and data-loader sections are intentionally retained because the
-same configs drive Lightning's validation-only CLI. They control evaluation
-devices, mixed precision, logging, batch size, and workers; they do not enable
-training. Model/data `class_path` entries are likewise required to construct
-the validation pipeline.
+Pretrained PMT-iFAN checkpoints are available upon request. Please submit the
+[checkpoint access form](https://docs.google.com/forms/d/e/1FAIpQLSf3r8iXFp233mapvFjmfbQQSQEgyo0CdbCUKz2Z77Rwe-Seqg/viewform?usp=publish-editor); once your request is approved, you will be able to download the checkpoints.
 
 ## Installation
 
 Python 3.10 or later, a CUDA-capable GPU, and a recent NVIDIA driver are
-recommended. Create a dedicated environment because the PMT and EoMT releases
-pin different PyTorch versions.
+recommended. You can refer to the [PMT](https://github.com/tue-mps/pmt) for configuration.
 
 ```bash
 cd PMT
@@ -40,15 +35,7 @@ python3 -m pip install -r requirements.txt
 ```
 
 The encoder is loaded from the gated Hugging Face repository
-`facebook/dinov3-vitl16-pretrain-lvd1689m`. Accept its access terms and log in
-once:
-
-```bash
-hf auth login
-```
-
-For offline use, pass a local Transformers model directory through
-`--backbone`.
+`facebook/dinov3-vitl16-pretrain-lvd1689m`.
 
 ## Image prediction
 
@@ -72,7 +59,6 @@ python3 predict.py \
   --config configs/coco_instance_pmt_ifan_640_inference.yaml \
   --input /path/to/image-or-directory \
   --output outputs/instance \
-  --score-threshold 0.30
 ```
 
 Panoptic segmentation:
@@ -91,7 +77,6 @@ Common options:
 | `--device auto\|cpu\|cuda\|cuda:N` | Inference device; default: `auto` |
 | `--checkpoint PATH` | Override automatic checkpoint selection |
 | `--backbone MODEL_OR_PATH` | Hugging Face model ID or local model directory |
-| `--score-threshold FLOAT` | Instance score threshold; default: `0.30` |
 
 For each input image, prediction writes a visualization, a JSON summary, and a
 machine-readable array:
@@ -190,14 +175,3 @@ Values are shown as percentages; the JSON summary stores values in `[0, 1]`.
 
 Running `run_validation.py` records full AP/PQ breakdowns, runtime, and the
 executed commands in `results/summary.json`.
-
-## Troubleshooting
-
-- **Checkpoint not found:** preserve the released `*_inference.pth` filenames,
-  or pass `--checkpoint`/`--checkpoint-dir` explicitly.
-- **Hugging Face 401 or `GatedRepoError`:** accept the DINOv3 access terms and
-  run `hf auth login`, or use a local backbone with `--backbone`.
-- **CUDA out of memory:** use a 640-pixel config, set validation batch size to
-  one, or predict images individually.
-- **Dataset file not found:** pass the directory that directly contains the
-  official archives shown above.
